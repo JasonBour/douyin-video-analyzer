@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+
+# 环境变量/敏感文件
+.env
+config_local.py
+*.key
+*.pem
+*.p12
+
+# 输出文件
+output/
+*.mp4
+*.wav
+*.mp3
+*.txt
+!references/*.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# 临时文件
+temp_*
+*.tmp
