@@ -4,11 +4,28 @@
 
 ## ✨ 功能特性
 
-- **多平台支持**：抖音视频/图文、小红书视频/图文、B站视频
-- **自动转写**：集成通义听悟云端转写，抗背景音乐干扰，识别准确率高
-- **PREP 自动拆解**：按观点/理由/展开/结尾四段式结构化输出
-- **飞书多维表格同步**：一键写入飞书 Base 建立素材库
+- **多平台支持**：抖音/小红书/B站/快手/微博/YouTube/TikTok等主流短视频平台
+- **双转写引擎**：
+  - **通义听悟云端转写**（推荐）：抗背景音乐干扰，识别准确率高，支持长音频
+  - **本地faster-whisper转写**：无需API密钥，离线可用，CPU int8推理
+- **PREP 自动拆解**：按观点/理由/展开/结尾四段式结构化输出，允许缺段不硬凑
+- **飞书多维表格同步**：一键写入飞书 Base 建立内容素材库
 - **本地导出**：支持 CSV / JSON / Markdown 格式导出
+
+## 🌐 支持平台
+
+| 平台 | 自动下载 | 自动转写 | 备注 |
+|---|---|---|---|
+| 抖音 | ✅ | ✅ | 支持短口令和完整链接，无需登录 |
+| 小红书 | ✅ | ✅ | 需配置Cookie避免风控，支持视频/图文 |
+| B站 | ✅ | ✅ | 自动获取标题、UP主、互动数据 |
+| 快手 | ✅ | ✅ | |
+| 微博视频 | ✅ | ✅ | |
+| YouTube | ✅ | ✅ | |
+| TikTok | ✅ | ✅ | |
+| Instagram/Facebook | ✅ | ✅ | |
+| X/Twitter | ✅ | ✅ | |
+| AcFun/芒果TV/梨视频 | ✅ | ✅ | |
 
 ## 📦 项目结构
 
@@ -40,15 +57,22 @@ douyin-video-analyzer/
 
 - Python 3.8+
 - ffmpeg（用于音频提取）
-- 通义听悟 API 凭证（可选，无则用本地whisper回退）
+- 二选一：
+  - 通义听悟 API 凭证（推荐，识别效果好）
+  - faster-whisper 本地环境（无需API，离线可用）
 
 ### 2. 配置环境变量
 
 ```bash
-# 通义听悟 API（推荐配置）
+# ===== 方式一：通义听悟云端转写（推荐）=====
 export ALIBABA_CLOUD_ACCESS_KEY_ID="你的AccessKey ID"
 export ALIBABA_CLOUD_ACCESS_KEY_SECRET="你的AccessKey Secret"
 export TINGWU_APP_KEY="你的通义听悟AppKey"
+
+# ===== 方式二：本地faster-whisper（无需API）=====
+# 国内网络需设置HF镜像
+export HF_ENDPOINT="https://hf-mirror.com"
+# 安装依赖：pip install faster-whisper
 
 # 小红书 Cookie（可选，配置后避免被风控）
 export XHS_COOKIE="从浏览器复制的小红书Cookie"
@@ -108,6 +132,15 @@ A: 配置 `XHS_COOKIE` 环境变量，从浏览器登录小红书后复制完整
 
 ### Q: 通义听悟API调用失败？
 A: 检查环境变量是否正确配置，确认阿里云账号有通义听悟服务权限和余额。
+
+### Q: 两种转写方式怎么选？
+A:
+- **通义听悟（云端）**：识别准确率高，抗背景音乐/口音干扰，适合带BGM的口播视频，按使用量付费
+- **faster-whisper（本地）**：完全免费离线，CPU就能跑，但对带背景音乐/口音的视频识别效果较差，适合清晰口播内容
+- 建议优先用通义听悟，无API时回退到本地whisper
+
+### Q: 本地whisper效果不好怎么办？
+A: 检查是否用`scripts/extract_audio.py`正确提取了16k单声道音频，不要直接用ffmpeg改采样率；或者改用通义听悟云端转写。
 
 ## 📄 License
 
